@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xpay支付体验</title>
+    <link rel="stylesheet" type="text/css" href="../css/public2.css">
+</head>
+<script src="../js/zlpay.min.js"></script>
+<body>
+<form>
+    <section>
+        <header class="header">
+            <img alt="xpay支付" src="/images/logo3.png">
+            <p><span>让</span><span>支</span><span>付</span><span>更</span><span>便</span><span>捷</span></p>
+        </header>
+        <div class="content">
+            <div class="pay-panel">
+                <div class="order-line">
+                    <label>商品名称</label>
+                    <div class="value" id="productName">xpay支付体验</div>
+                </div>
+                <div class="order-line">
+                    <label>金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额</label>
+                    <div class="value" id="amount">0.01元</div>
+                </div>
+            </div>
+            <button type="button" class="btn" onclick="wap_pay('ALI_WAP','ALI_WAP')">支付宝H5支付</button>
+            <button type="button" class="btn" onclick="wap_pay('ALI_SCAN','ALI_SCAN_ALLINSYB')">支付宝扫码支付通联渠道</button>
+        </div>
+    </section>
+</form>
+<footer>
+    <div id="channels" class="pay-channel">
+
+    </div>
+</footer>
+<div class="modelback"></div>
+<iframe src="" id="myiframe"></iframe>
+
+<script>
+    //http://106.15.61.30:8087/payment/api_payment
+    var YOUR_URL = 'http://localhost:8087/payment/api_payment';
+
+    function wap_pay(channel,sub_channel) {
+        var amount = document.getElementById('amount').value * 100;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", YOUR_URL, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("channel=" + channel +"&sub_channel=" + sub_channel + "&amount=1&subject=测试商品名称&body=测试商品信息描述&remark=备注信息");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log(xhr.responseText);
+                zlpay.createPayment(xhr.responseText, function (result, err) {
+                    console.log(result);
+                    console.log(err.msg);
+                });
+            }
+        }
+    }
+</script>
+</body>
+</html>
